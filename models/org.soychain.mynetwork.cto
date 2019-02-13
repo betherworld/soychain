@@ -2,19 +2,33 @@
  * My commodity trading network
  */
 namespace org.soychain.mynetwork
-asset Commodity identified by tradingSymbol {
-    o String tradingSymbol
-    o String description
-    o String mainExchange
+asset Soybean identified by tagId {
+    o String tagId
+    o String fieldId
     o Double quantity
-    --> Trader owner
+    --> TradingPartner owner
 }
-participant Trader identified by tradeId {
-    o String tradeId
-    o String firstName
-    o String lastName
+asset Field identified by fieldId {
+    o String fieldId
+    o String fieldNumber // needed?
+    --> Farmer owner
 }
-transaction Trade {
+participant TradingPartner identified by tradeID {
+  o String tradeID
+  o Integer amountStored
+}
+participant Trader extends TradingPartner {
+}
+participant Buyer extends TradingPartner {
+}
+participant Farmer extends TradingPartner {
+    o Boolean hasWarehouse
+    o Boolean hasTransportation
+    o Integer capacity
+    o Boolean useSubcontractor
+}
+
+/*transaction Trade {
     --> Commodity commodity
     --> Trader newOwner
 }
@@ -28,4 +42,4 @@ transaction RemoveHighQuantityCommodities {
 
 event RemoveNotification {
     --> Commodity commodity
-}
+}*/
