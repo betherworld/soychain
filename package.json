@@ -3,7 +3,7 @@
     "composer": "^0.20.7"
   },
   "name": "soychain",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "soychain network",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/soychain.bna",
