@@ -23,7 +23,7 @@ asset Field identified by fieldId {
 }
 abstract participant TradingPartner identified by tradeID {
   o String tradeID
-  --> Soybean[] soybeans
+  --> Soybean[] soybeans optional
 }
 participant Trader extends TradingPartner {
 }
