@@ -40,12 +40,10 @@ transaction Trade {
   --> TradingPartner newOwner
 }
 
-asset test identified by testId{
-	o String testId
-}
 transaction Harvest{
  	o String name 
     --> Field field
+    --> Farmer owner
     o Integer quantity
 }
 
