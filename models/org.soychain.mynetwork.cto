@@ -14,9 +14,11 @@ asset Soybean identified by fieldId {
     o String fieldId
     o Integer quantity
     o MovementStatus movementStatus
+    --> TradingPartner owner
 }
 asset Field identified by fieldId {
     o String fieldId
+    o Integer limit
     --> Farmer owner // maybe dont need
 }
 abstract participant TradingPartner identified by tradeID {
@@ -38,6 +40,14 @@ transaction Trade {
   --> TradingPartner newOwner
 }
 
+asset test identified by testId{
+	o String testId
+}
+transaction Harvest{
+ 	o String name 
+    --> Field field
+    o Integer quantity
+}
 
 /*transaction Trade {
     --> Commodity commodity

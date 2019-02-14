@@ -49,20 +49,56 @@ rule R3_TradersSeeOwnHistoryOnly {
 
 rule R4a_CustomerSeeThemselves {
   description: "Regulators can see and update their own record"
-  participant: "org.soychain.mynetwork.Customer"
+  participant: "org.soychain.mynetwork.Buyer"
   operation: READ, UPDATE
-  resource: "org.soychain.mynetwork.Customer"
+  resource: "org.soychain.mynetwork.Buyer"
   action: ALLOW
 }
 
 rule R4b_CustomerTransactionView {
     description: "Grant Regulator full access to Trade Transactions"
-    participant: "org.soychain.mynetwork.Customer"
+    participant: "org.soychain.mynetwork.Buyer"
     operation: ALL
     resource: "org.soychain.mynetwork.Trade"
     action: ALLOW
 }
 
+rule R5_FarmersHarvestTheirCommodities {
+  description: "Farmer can see/work with their own Commodities"
+  participant(t): "org.soychain.mynetwork.Farmer"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Soybean"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R6_EnableHarvestTxn {
+    description: "Enable Farmers to submit transactions"
+    participant: "org.soychain.mynetwork.Farmer"
+    operation: ALL
+    resource: "org.soychain.mynetwork.Harvest"
+    action: ALLOW
+}
+
+rule R7_FarmersSeeTheirFields {
+  description: "Farmer can see/work with their own Fields"
+  participant(t): "org.soychain.mynetwork.Farmer"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Field"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R8_FarmersHarvest {
+    description: "Allow Farmers to create and view Soybean"
+    participant(p): "org.soychain.mynetwork.Farmer"
+    operation: CREATE
+    resource(o): "org.soychain.mynetwork.Soybean"
+    transaction(tx): "org.soychain.mynetwork.Harvest"
+    condition: (o.owner.getIdentifier() == p.getIdentifier())
+    action: ALLOW
+}
+    
 rule SystemACL {
   description:  "System ACL to permit all access"
   participant: "ANY"
