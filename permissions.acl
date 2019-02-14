@@ -1,11 +1,65 @@
 /**
  * Access control rules for tutorial-network
  */
+
+ /*
 rule Default {
     description: "Allow all participants access to all resources"
     participant: "ANY"
     operation: ALL
     resource: "org.soychain.mynetwork.*"
+    action: ALLOW
+}
+*/
+
+rule R1a_TraderSeeUpdateThemselvesOnly {
+  description: "Trader can see and update their own record only"
+  participant(t): "org.soychain.mynetwork.Trader"
+  operation: READ, UPDATE
+  resource(v): "org.soychain.mynetwork.Trader"
+  condition: (v.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R1b_TraderSeeTheirCommodities {
+  description: "Trader can see/work with their own Commodities"
+  participant(t): "org.soychain.mynetwork.Trader"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Commodity"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R2_EnableTradeTxn {
+    description: "Enable Traders to submit transactions"
+    participant: "org.soychain.mynetwork.Trader"
+    operation: ALL
+    resource: "org.soychain.mynetwork.Trade"
+    action: ALLOW
+}
+
+rule R3_TradersSeeOwnHistoryOnly {
+  description: "Traders should be able to see the history of their own transactions only"
+  participant(t): "org.soychain.mynetwork.Trader"
+  operation: READ
+  resource(v): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (v.participantInvoking.getIdentifier() != t.getIdentifier())
+  action: DENY
+}
+
+rule R4a_CustomerSeeThemselves {
+  description: "Regulators can see and update their own record"
+  participant: "org.soychain.mynetwork.Customer"
+  operation: READ, UPDATE
+  resource: "org.soychain.mynetwork.Customer"
+  action: ALLOW
+}
+
+rule R4b_CustomerTransactionView {
+    description: "Grant Regulator full access to Trade Transactions"
+    participant: "org.soychain.mynetwork.Customer"
+    operation: ALL
+    resource: "org.soychain.mynetwork.Trade"
     action: ALLOW
 }
 
@@ -15,4 +69,20 @@ rule SystemACL {
   operation: ALL
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
 }
