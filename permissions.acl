@@ -112,6 +112,43 @@ rule R11_TradingPartnersCanTrade {
   condition: (c.owner.getIdentifier() == t.getIdentifier())
   action: ALLOW
 }
+
+rule R12_TradingPartnersCanSplit {
+  description: "Trading Partners can split their own Soy"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Soybean"
+  transaction(tx): "org.soychain.mynetwork.Split"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+
+rule R13_TradingPartnersCanMerge {
+  description: "Trading Partners can merge their own Soy"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Soybean"
+  transaction(tx): "org.soychain.mynetwork.Merge"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R14_TradingPartnersMerge {
+    description: "Grant Regulator full access to Merge Transactions"
+    participant: "org.soychain.mynetwork.TradingPartner"
+    operation: ALL
+    resource: "org.soychain.mynetwork.Merge"
+    action: ALLOW
+}
+
+rule R15_TradingPartnersSplit {
+    description: "Grant Regulator full access to Merge Transactions"
+    participant: "org.soychain.mynetwork.TradingPartner"
+    operation: ALL
+    resource: "org.soychain.mynetwork.Split"
+    action: ALLOW
+}
     
 rule SystemACL {
   description:  "System ACL to permit all access"
