@@ -1,64 +1,53 @@
 /**
- * Access control rules for tutorial-network
+ * Access control rules for soychain
  */
 
- /*
-rule Default {
-    description: "Allow all participants access to all resources"
-    participant: "ANY"
-    operation: ALL
-    resource: "org.soychain.mynetwork.*"
-    action: ALLOW
-}
-*/
-
-rule R1a_TraderSeeUpdateThemselvesOnly {
-  description: "Trader can see and update their own record only"
-  participant(t): "org.soychain.mynetwork.Trader"
-  operation: READ, UPDATE
-  resource(v): "org.soychain.mynetwork.Trader"
-  condition: (v.getIdentifier() == t.getIdentifier())
-  action: ALLOW
-}
-
-rule R1b_TraderSeeTheirCommodities {
-  description: "Trader can see/work with their own Commodities"
-  participant(t): "org.soychain.mynetwork.Trader"
-  operation: ALL
+rule R1b_TradingPartnersSeeTheirCommodities {
+  description: "Trader can see their own Commodities"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: READ
   resource(c): "org.soychain.mynetwork.Soybean"
   condition: (c.owner.getIdentifier() == t.getIdentifier())
   action: ALLOW
 }
 
 rule R2_EnableTradeTxn {
-    description: "Enable Traders to submit transactions"
-    participant: "org.soychain.mynetwork.Trader"
+    description: "Enable Traders to trade"
+    participant: "org.soychain.mynetwork.TradingPartner"
     operation: ALL
     resource: "org.soychain.mynetwork.Trade"
     action: ALLOW
 }
 
-rule R3_TradersSeeOwnHistoryOnly {
+rule R3_TradingPartnersSeeOwnHistoryOnly {
   description: "Traders should be able to see the history of their own transactions only"
-  participant(t): "org.soychain.mynetwork.Trader"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
   operation: READ
   resource(v): "org.hyperledger.composer.system.HistorianRecord"
   condition: (v.participantInvoking.getIdentifier() != t.getIdentifier())
   action: DENY
 }
 
-rule R4a_CustomerSeeThemselves {
-  description: "Regulators can see and update their own record"
-  participant: "org.soychain.mynetwork.Buyer"
-  operation: READ, UPDATE
-  resource: "org.soychain.mynetwork.Buyer"
+rule R4a_TradingPartnersSeeThemselves {
+  description: "Trading Partners see themselves"
+  participant: "org.soychain.mynetwork.TradingPartner"
+  operation: READ
+  resource: "org.soychain.mynetwork.TradingPartner"
   action: ALLOW
 }
 
-
+rule R5_TradingPartnersCanTrade {
+  description: "Trading Partners can Trade their own Soy"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Soybean"
+  transaction(tx): "org.soychain.mynetwork.Trade"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
 
 rule R6_FarmerHarvest {
-    description: "Grant Regulator full access to Harvest Transactions"
+    description: "Farmers can harvest"
     participant: "org.soychain.mynetwork.Farmer"
     operation: ALL
     resource: "org.soychain.mynetwork.Harvest"
