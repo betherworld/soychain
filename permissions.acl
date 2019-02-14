@@ -25,7 +25,7 @@ rule R1b_TraderSeeTheirCommodities {
   description: "Trader can see/work with their own Commodities"
   participant(t): "org.soychain.mynetwork.Trader"
   operation: ALL
-  resource(c): "org.soychain.mynetwork.Commodity"
+  resource(c): "org.soychain.mynetwork.Soybean"
   condition: (c.owner.getIdentifier() == t.getIdentifier())
   action: ALLOW
 }
