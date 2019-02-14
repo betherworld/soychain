@@ -58,19 +58,3 @@ transaction Split{
     o String bean2
     o Integer quantity
 }
-
-/*transaction Trade {
-    --> Commodity commodity
-    --> Trader newOwner
-}
-
-event TradeNotification {
-    --> Commodity commodity
-}
-
-transaction RemoveHighQuantityCommodities {
-}
-
-event RemoveNotification {
-    --> Commodity commodity
-}*/
