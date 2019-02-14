@@ -4,13 +4,14 @@
 namespace org.soychain.mynetwork
 
 enum MovementStatus {
-  o ON_FIELD
+  o HARVESTED
   o IN_FARMERWAREHOUSE
   o IN_TRANSITTRADER
   o IN_TRADERWAREHOUSE
   o IN_TRANSITBUYER
 }
-asset Soybean identified by fieldId {
+asset Soybean identified by soyId {
+    o String soyId
     o String fieldId
     o Integer quantity
     o MovementStatus movementStatus
@@ -44,6 +45,17 @@ transaction Harvest{
  	o String name 
     --> Field field
     --> Farmer owner
+    o Integer quantity
+}
+
+transaction Merge{
+  	--> Soybean bean1
+ 	--> Soybean bean2
+}
+
+transaction Split{
+ 	--> Soybean bean1
+    o String bean2
     o Integer quantity
 }
 

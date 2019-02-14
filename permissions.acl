@@ -55,25 +55,10 @@ rule R4a_CustomerSeeThemselves {
   action: ALLOW
 }
 
-rule R4b_CustomerTransactionView {
-    description: "Grant Regulator full access to Trade Transactions"
-    participant: "org.soychain.mynetwork.Buyer"
-    operation: ALL
-    resource: "org.soychain.mynetwork.Trade"
-    action: ALLOW
-}
 
-rule R5_FarmersHarvestTheirCommodities {
-  description: "Farmer can see/work with their own Commodities"
-  participant(t): "org.soychain.mynetwork.Farmer"
-  operation: ALL
-  resource(c): "org.soychain.mynetwork.Soybean"
-  condition: (c.owner.getIdentifier() == t.getIdentifier())
-  action: ALLOW
-}
 
-rule R6_EnableHarvestTxn {
-    description: "Enable Farmers to submit transactions"
+rule R6_FarmerHarvest {
+    description: "Grant Regulator full access to Harvest Transactions"
     participant: "org.soychain.mynetwork.Farmer"
     operation: ALL
     resource: "org.soychain.mynetwork.Harvest"
@@ -81,9 +66,9 @@ rule R6_EnableHarvestTxn {
 }
 
 rule R7_FarmersSeeTheirFields {
-  description: "Farmer can see/work with their own Fields"
+  description: "Farmer can see their own Fields"
   participant(t): "org.soychain.mynetwork.Farmer"
-  operation: ALL
+  operation: READ
   resource(c): "org.soychain.mynetwork.Field"
   condition: (c.owner.getIdentifier() == t.getIdentifier())
   action: ALLOW
@@ -95,8 +80,37 @@ rule R8_FarmersHarvest {
     operation: CREATE
     resource(o): "org.soychain.mynetwork.Soybean"
     transaction(tx): "org.soychain.mynetwork.Harvest"
-    condition: (o.owner.getIdentifier() == p.getIdentifier())
+    condition: (true)
     action: ALLOW
+}
+
+rule R9_FarmersUpdateTheirFields {
+  description: "Farmer can update their own Fields"
+  participant(t): "org.soychain.mynetwork.Farmer"
+  operation: UPDATE
+  resource(c): "org.soychain.mynetwork.Field"
+  transaction(tx): "org.soychain.mynetwork.Harvest"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R10_TradingPartnerSeeTheirSoy {
+  description: "Farmer can see their own Fields"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: READ
+  resource(c): "org.soychain.mynetwork.Soybean"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R11_TradingPartnersCanTrade {
+  description: "Farmer can update their own Fields"
+  participant(t): "org.soychain.mynetwork.TradingPartner"
+  operation: ALL
+  resource(c): "org.soychain.mynetwork.Soybean"
+  transaction(tx): "org.soychain.mynetwork.Trade"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
 }
     
 rule SystemACL {
