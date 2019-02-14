@@ -2,20 +2,26 @@
  * My commodity trading network
  */
 namespace org.soychain.mynetwork
-asset Soybean identified by tagId {
-    o String tagId
+
+enum MovementStatus {
+  o ON_FIELD
+  o IN_FARMERWAREHOUSE
+  o IN_TRANSITTRADER
+  o IN_TRADERWAREHOUSE
+  o IN_TRANSITBUYER
+}
+asset Soybean identified by fieldId {
     o String fieldId
-    o Double quantity
-    --> TradingPartner owner
+    o Integer quantity
+    o MovementStatus movementStatus
 }
 asset Field identified by fieldId {
     o String fieldId
-    o String fieldNumber // needed?
-    --> Farmer owner
+    --> Farmer owner // maybe dont need
 }
-participant TradingPartner identified by tradeID {
+abstract participant TradingPartner identified by tradeID {
   o String tradeID
-  o Integer amountStored
+  --> Soybean[] soybeans
 }
 participant Trader extends TradingPartner {
 }
@@ -27,6 +33,11 @@ participant Farmer extends TradingPartner {
     o Integer capacity
     o Boolean useSubcontractor
 }
+transaction Trade {
+  --> Soybean soybean
+  --> TradingPartner newOwner
+}
+
 
 /*transaction Trade {
     --> Commodity commodity

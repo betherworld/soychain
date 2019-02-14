@@ -1,6 +1,6 @@
 /** Sample queries for Commodity Trading business network
 */
-
+/*
 query selectCommodities {
   description: "Select all commodities"
   statement:
@@ -27,3 +27,4 @@ query selectCommoditiesWithHighQuantity {
       SELECT org.soychain.mynetwork.Commodity
           WHERE (quantity > 60)
 }
+*/
