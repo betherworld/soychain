@@ -36,23 +36,24 @@ participant Farmer extends TradingPartner {
     o Integer capacity
     o Boolean useSubcontractor
 }
+// transaction for trading betweend farmers and traders
 transaction Trade {
   --> Soybean soybean
   --> TradingPartner newOwner
 }
-
+// tansaction for harvesting soybeans
 transaction Harvest{
  	o String name 
     --> Field field
     --> Farmer owner
     o Integer quantity
 }
-
+// merge in case beans are from same field
 transaction Merge{
   	--> Soybean bean1
- 	--> Soybean bean2
+ 	  --> Soybean bean2
 }
-
+// split if only part of harvest is traded
 transaction Split{
  	--> Soybean bean1
     o String bean2
